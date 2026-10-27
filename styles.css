@@ -72,11 +72,22 @@ main {
   gap: 42px;
   align-items: start;
 }
-.hero-art {
-  width: min(520px, 100%);
-  height: auto;
+.hero-art-wrap {
   justify-self: center;
   align-self: center;
+  width: min(520px, 100%);
+  cursor: pointer;
+}
+.hero-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translate3d(0, 0, 0);
+  transition: transform 160ms ease-out;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-art { transition: none; }
 }
 .home-actions { margin-top: 22px; }
 a.go, a.ghost { display: inline-block; text-decoration: none; }

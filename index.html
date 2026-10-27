@@ -49,7 +49,9 @@
             <a class="ghost" href="claim.html">Claim</a>
           </div>
         </div>
-        <img class="hero-art" src="/hero.png" alt="" />
+        <div class="hero-art-wrap">
+          <img class="hero-art" src="/hero.png?v=right" alt="" />
+        </div>
       </section>
 
       <section class="fees" id="fees">
@@ -78,5 +80,21 @@
       <img class="logo" src="/logo.png" alt="" />
       <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
     </footer>
+    <script>
+      const wrap = document.querySelector('.hero-art-wrap')
+      const art = document.querySelector('.hero-art')
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (wrap && art && !reduce) {
+        wrap.addEventListener('pointermove', (event) => {
+          const box = wrap.getBoundingClientRect()
+          const x = (event.clientX - box.left) / box.width - 0.5
+          const y = (event.clientY - box.top) / box.height - 0.5
+          art.style.transform = `translate3d(${(x * 72).toFixed(1)}px, ${(y * 52).toFixed(1)}px, 0) rotate(${(x * 18).toFixed(2)}deg)`
+        })
+        wrap.addEventListener('pointerleave', () => {
+          art.style.transform = ''
+        })
+      }
+    </script>
   </body>
 </html>
