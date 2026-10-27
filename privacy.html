@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy · GitLaunch</title>
+    <meta name="description" content="What GitLaunch stores when you launch or claim." />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@500;600&family=Schibsted+Grotesk:wght@400;560;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="brand-block">
+        <a class="brand" href="index.html">
+          <img class="logo" src="/logo.png" alt="" />
+          GitLaunch
+        </a>
+        <a class="followed" href="https://x.com/toly" target="_blank" rel="noopener">Followed by @toly</a>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="launch.html">Launch</a>
+        <a href="coins.html">Coins</a>
+        <a href="claim.html">Claim</a>
+        <a href="https://x.com/usegitlaunch">X</a>
+      </nav>
+    </header>
+
+    <main class="legal">
+      <p class="kicker">
+        <img class="logo" src="/logo.png" alt="" />
+        Privacy
+      </p>
+      <h1>Privacy</h1>
+      <p class="lede">27 Oct 2026. What the site keeps, and what it leaves alone.</p>
+
+      <h2>Sign-in</h2>
+      <p>
+        Launch uses X. Claim uses GitHub. Each sign-in stores the numeric id and the login, and nothing else from that account.
+        The access token is not kept. The cookie lasts 14 days, is HttpOnly, and is only for this site.
+      </p>
+
+      <h2>A launch</h2>
+      <p>When a coin is created, the site stores:</p>
+      <ul>
+        <li>Name, ticker, and logo. The logo is a small image.</li>
+        <li>The GitHub login and numeric id that can claim it.</li>
+        <li>The X id and login that launched it, so the 10-minute limit can be checked.</li>
+        <li>Optional Twitter handle and website, if you typed them.</li>
+        <li>The mint address, and the claim amounts already paid.</li>
+      </ul>
+
+      <h2>A claim</h2>
+      <p>
+        The Solana wallet you paste is used as the destination for that claim. It is stored with the claim record so the payout can be checked.
+        GitHub does not receive the tokens.
+      </p>
+
+      <h2>What is public</h2>
+      <p>
+        A listed coin's name, ticker, mint, GitHub login, and metadata are public. That is how the coin shows on the site and on the chain.
+        Session cookies are not public. The site does not sell this data.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        The site sets a session cookie when you sign in, and a short-lived cookie while X or GitHub sends you back. There is no ad tracker and no analytics cookie.
+      </p>
+
+      <p>Questions go to <a href="https://x.com/usegitlaunch">@usegitlaunch</a>.</p>
+    </main>
+
+    <footer>
+      <div class="foot-brand">
+        <img class="logo" src="/logo.png" alt="" />
+        <p>One master wallet is the dev on every coin. A GitHub account claims only the coins linked to it.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Site">
+        <a href="index.html#fees">Fees</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html" aria-current="page">Privacy</a>
+        <a href="https://x.com/usegitlaunch">@usegitlaunch</a>
+      </nav>
+      <p class="official">
+        <span>Official CA</span>
+        <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</a>
+        <button type="button" class="copy-ca" data-ca="3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB">Copy</button>
+      </p>
+    </footer>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

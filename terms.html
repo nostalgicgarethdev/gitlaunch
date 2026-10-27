@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terms · GitLaunch</title>
+    <meta name="description" content="Terms for launching and claiming on GitLaunch." />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@500;600&family=Schibsted+Grotesk:wght@400;560;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="brand-block">
+        <a class="brand" href="index.html">
+          <img class="logo" src="/logo.png" alt="" />
+          GitLaunch
+        </a>
+        <a class="followed" href="https://x.com/toly" target="_blank" rel="noopener">Followed by @toly</a>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="launch.html">Launch</a>
+        <a href="coins.html">Coins</a>
+        <a href="claim.html">Claim</a>
+        <a href="https://x.com/usegitlaunch">X</a>
+      </nav>
+    </header>
+
+    <main class="legal">
+      <p class="kicker">
+        <img class="logo" src="/logo.png" alt="" />
+        Terms
+      </p>
+      <h1>Terms</h1>
+      <p class="lede">27 Oct 2026. Using the site means you accept this.</p>
+
+      <h2>The site</h2>
+      <p>
+        GitLaunch lets someone name a coin and a GitHub account. The coin is created on Raydium LaunchLab.
+        This page is the whole agreement. There is no separate company behind the form.
+      </p>
+
+      <h2>Who creates the coin</h2>
+      <p>
+        One master wallet creates every coin and stays the dev on the chart. You do not hold that key.
+        A launch is a real on-chain transaction. If it fails, no coin is listed.
+      </p>
+
+      <h2>Who can claim</h2>
+      <p>
+        Each coin remembers one numeric GitHub id. That person signs in with GitHub and can claim only the coins linked to that id.
+        A rename still matches. The person who launches does not have to be that GitHub account.
+        Sign-in to launch is X. Each X account can launch one coin every 10 minutes.
+      </p>
+
+      <h2>Fees</h2>
+      <p>On a trade, three cuts apply:</p>
+      <ul>
+        <li>0.5% creator fee. LaunchLab caps this at 0.5%. It belongs to that coin's GitHub account. A claim sends only what has actually accrued for that coin.</li>
+        <li>1% platform fee. It stays in the master wallet, from every coin.</li>
+        <li>0.25% Raydium protocol fee, on top of those two.</li>
+      </ul>
+      <p>
+        Nothing is bought and burned. Unclaimed stays at zero until trades create a real creator fee.
+        One coin's claim does not pay another coin's share.
+      </p>
+
+      <h2>The wallet you paste</h2>
+      <p>
+        GitHub cannot hold SOL. At claim time you enter a Solana wallet. That address receives this coin's creator fee.
+        Check it before you submit. A sent transfer is not reversed here.
+      </p>
+
+      <h2>What you launch</h2>
+      <p>
+        You choose the name, ticker, logo, and the GitHub account. You are responsible for those.
+        Coins can go to zero. This is not financial, legal, or tax advice, and it is not an offer to sell a security.
+      </p>
+
+      <h2>The venue</h2>
+      <p>
+        Raydium LaunchLab is the venue. GitLaunch does not custody the wallet you paste, and it does not guarantee a launch, a claim, or a price.
+        The site can change, pause, or stop. Questions go to <a href="https://x.com/usegitlaunch">@usegitlaunch</a>.
+      </p>
+    </main>
+
+    <footer>
+      <div class="foot-brand">
+        <img class="logo" src="/logo.png" alt="" />
+        <p>One master wallet is the dev on every coin. A GitHub account claims only the coins linked to it.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Site">
+        <a href="index.html#fees">Fees</a>
+        <a href="terms.html" aria-current="page">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="https://x.com/usegitlaunch">@usegitlaunch</a>
+      </nav>
+      <p class="official">
+        <span>Official CA</span>
+        <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</a>
+        <button type="button" class="copy-ca" data-ca="3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB">Copy</button>
+      </p>
+    </footer>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

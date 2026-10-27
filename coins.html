@@ -16,15 +16,19 @@
   </head>
   <body>
     <header class="bar">
-      <a class="brand" href="index.html">
-        <img class="logo" src="/logo.png" alt="" />
-        GitLaunch
-      </a>
+      <div class="brand-block">
+        <a class="brand" href="index.html">
+          <img class="logo" src="/logo.png" alt="" />
+          GitLaunch
+        </a>
+        <a class="followed" href="https://x.com/toly" target="_blank" rel="noopener">Followed by @toly</a>
+      </div>
       <nav>
         <a href="index.html">Home</a>
         <a href="launch.html">Launch</a>
         <a href="coins.html" aria-current="page">Coins</a>
         <a href="claim.html">Claim</a>
+        <a href="https://x.com/usegitlaunch">X</a>
       </nav>
     </header>
 
@@ -39,14 +43,37 @@
         </div>
         <p id="coin-count" class="session"></p>
       </div>
-      <p class="lede">Listed on GitLaunch, created on Launch by the master wallet. Saved in this browser.</p>
+      <p class="lede">Same master wallet on every coin. Each row is a separate coin, claimed by its own GitHub account.</p>
+      <p class="unclaimed" id="unclaimed-live">
+        <span id="unclaimed-total">0.0000</span>
+        <small>SOL unclaimed</small>
+      </p>
+      <p class="fine">Updates as trades land.</p>
       <ol id="coins-list" class="board"></ol>
-      <p id="coins-empty" class="fine" hidden>Nothing launched on this browser yet.</p>
+      <p id="coins-empty" class="fine" hidden>Nothing launched yet.</p>
+      <section class="claims" aria-labelledby="claims-title">
+        <h2 id="claims-title">Recent claims</h2>
+        <ol id="claims-list" class="history"></ol>
+        <p id="claims-empty" class="fine">No claims yet.</p>
+      </section>
     </main>
 
     <footer>
-      <img class="logo" src="/logo.png" alt="" />
-      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+      <div class="foot-brand">
+        <img class="logo" src="/logo.png" alt="" />
+        <p>One master wallet is the dev on every coin. A GitHub account claims only the coins linked to it.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Site">
+        <a href="index.html#fees">Fees</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="https://x.com/usegitlaunch">@usegitlaunch</a>
+      </nav>
+      <p class="official">
+        <span>Official CA</span>
+        <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</a>
+        <button type="button" class="copy-ca" data-ca="3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB">Copy</button>
+      </p>
     </footer>
     <script src="/app.js" type="module"></script>
   </body>

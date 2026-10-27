@@ -9,6 +9,12 @@
       content="Launch a coin for a GitHub account. It lists on GitLaunch, on Launch."
     />
     <link rel="icon" href="/logo.png" type="image/png" />
+    <meta property="og:title" content="GitLaunch" />
+    <meta property="og:description" content="Launch a coin for a GitHub account. The master wallet stays the dev." />
+    <meta property="og:image" content="https://usegitlaunch.fun/x.png" />
+    <meta property="og:url" content="https://usegitlaunch.fun" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@usegitlaunch" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,15 +25,19 @@
   </head>
   <body>
     <header class="bar">
-      <a class="brand" href="index.html">
-        <img class="logo" src="/logo.png" alt="" />
-        GitLaunch
-      </a>
+      <div class="brand-block">
+        <a class="brand" href="index.html">
+          <img class="logo" src="/logo.png" alt="" />
+          GitLaunch
+        </a>
+        <a class="followed" href="https://x.com/toly" target="_blank" rel="noopener">Followed by @toly</a>
+      </div>
       <nav>
         <a href="index.html" aria-current="page">Home</a>
         <a href="launch.html">Launch</a>
         <a href="coins.html">Coins</a>
         <a href="claim.html">Claim</a>
+        <a href="https://x.com/usegitlaunch">X</a>
       </nav>
     </header>
 
@@ -40,18 +50,61 @@
           </p>
           <h1>Launch a coin for a GitHub account.</h1>
           <p class="lede">
-            The coin lists here. The master wallet creates it on Launch, so the chart shows that wallet as the dev.
-            The numeric id GitHub assigns is who can claim. One percent of each trade accrues there.
+            Name the coin and a GitHub account. One master wallet creates every coin and is the dev on the chart.
+            Each coin's 0.5% belongs to its own GitHub account.
           </p>
+          <div class="stat">
+            <p class="unclaimed" id="unclaimed-live">
+              <span id="unclaimed-total">0.0000</span>
+              <small>SOL unclaimed</small>
+            </p>
+            <p class="fine">Updates as trades land.</p>
+          </div>
           <div class="row home-actions">
             <a class="go" href="launch.html">Launch</a>
             <a class="ghost" href="coins.html">Coins</a>
             <a class="ghost" href="claim.html">Claim</a>
           </div>
+          <section class="ca-feature" aria-label="Official contract">
+            <p class="kicker">Official CA · GitLaunch</p>
+            <p class="ca-address">
+              <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</a>
+            </p>
+            <div class="row ca-actions">
+              <button type="button" class="go copy-ca" data-ca="3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB">Copy</button>
+              <a class="ghost" href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">Solscan</a>
+            </div>
+          </section>
         </div>
         <div class="hero-art-wrap">
-          <img class="hero-art" src="/hero.png?v=right" alt="" />
+          <img class="hero-art" src="/hero.png?v=noshadow" alt="" />
         </div>
+      </section>
+
+      <section class="fees" id="how">
+        <h2>Many coins, one dev</h2>
+        <ol>
+          <li>
+            <strong>Same wallet</strong>
+            <span>Every coin is created by the master wallet. That wallet is the dev on every chart.</span>
+          </li>
+          <li>
+            <strong>One GitHub</strong>
+            <span>Each coin remembers one numeric GitHub id. A rename still matches. The launcher does not have to be that account.</span>
+          </li>
+          <li>
+            <strong>Separate claims</strong>
+            <span>Sign in as that GitHub and paste a Solana wallet. Only that coin's creator fee is sent. The other coins keep theirs.</span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="claims" aria-labelledby="claims-title">
+        <p class="kicker">On chain</p>
+        <h2 id="claims-title">Recent claims</h2>
+        <p class="fine">Each row is a GitHub account claiming that coin's 0.5%.</p>
+        <ol id="claims-list" class="history"></ol>
+        <p id="claims-empty" class="fine">No claims yet.</p>
       </section>
 
       <section class="fees" id="fees">
@@ -59,27 +112,41 @@
         <ol>
           <li>
             <img class="logo" src="/logo.png" alt="" />
-            <strong>1%</strong>
-            <span>Buys the coin and burns it. The master wallet is the buyer, so it shows up as the dev.</span>
+            <strong>0.5%</strong>
+            <span>Creator fee. The chain caps this at 0.5%. It builds up on that coin for its GitHub account. Claim sends what is actually there.</span>
           </li>
           <li>
             <img class="logo" src="/logo.png" alt="" />
             <strong>1%</strong>
-            <span>Burned by the platform.</span>
+            <span>Platform fee. It stays in the master wallet, from every coin.</span>
           </li>
           <li>
             <img class="logo" src="/logo.png" alt="" />
-            <strong>1%</strong>
-            <span>Accrues to the GitHub account. Claim sends it. The next trades start a new balance.</span>
+            <strong>0.25%</strong>
+            <span>Raydium's protocol fee, on top of those two.</span>
           </li>
         </ol>
       </section>
     </main>
 
     <footer>
-      <img class="logo" src="/logo.png" alt="" />
-      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+      <div class="foot-brand">
+        <img class="logo" src="/logo.png" alt="" />
+        <p>One master wallet is the dev on every coin. A GitHub account claims only the coins linked to it.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Site">
+        <a href="index.html#fees">Fees</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="https://x.com/usegitlaunch">@usegitlaunch</a>
+      </nav>
+      <p class="official">
+        <span>Official CA</span>
+        <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</a>
+        <button type="button" class="copy-ca" data-ca="3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB">Copy</button>
+      </p>
     </footer>
+    <script src="/app.js" type="module"></script>
     <script>
       const wrap = document.querySelector('.hero-art-wrap')
       const art = document.querySelector('.hero-art')

@@ -1,5 +1,9 @@
 {
   "cleanUrls": false,
+  "functions": {
+    "api/launch.js": { "maxDuration": 60 },
+    "api/claim.js": { "maxDuration": 60 }
+  },
   "headers": [
     {
       "source": "/(.*)",

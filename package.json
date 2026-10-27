@@ -1,0 +1,20 @@
+{
+  "name": "gitlaunch",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@raydium-io/raydium-sdk-v2": "0.2.76-alpha",
+    "@vercel/blob": "^2.3.1",
+    "@solana/web3.js": "^1.98.4",
+    "bn.js": "^5.2.2",
+    "bs58": "^6.0.0"
+  },
+  "overrides": {
+    "rpc-websockets": {
+      "uuid": "9.0.1"
+    }
+  }
+}

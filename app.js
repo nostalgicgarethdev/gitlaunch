@@ -1,58 +1,12 @@
-const KEY = 'gitlaunch-v1'
-const FEE = 0.01
-const DEMO_CA = 'GitLaunchDemoCA111111111111111111111111'
-
 const $ = (id) => document.getElementById(id)
 
-let state = load()
-let timer = 0
+let coins = []
+let session = null
+let selected = ''
 let logoData = ''
 
-function load() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(KEY) || '')
-    if (Array.isArray(saved?.coins)) {
-      saved.session = saved.session || null
-      for (const coin of saved.coins) {
-        if (!coin.ca && coin.ticker === 'DEMO') coin.ca = DEMO_CA
-        if (!coin.ca) coin.ca = ''
-        coin.twitter ||= ''
-        coin.website ||= ''
-        coin.logo ||= ''
-      }
-      return saved
-    }
-  } catch {
-    // A fresh desk starts on the demo coin.
-  }
-  return {
-    session: null,
-    coins: [
-      {
-        ticker: 'DEMO',
-        name: 'Demo',
-        ca: DEMO_CA,
-        github: 'demo',
-        githubId: 0,
-        twitter: '',
-        website: '',
-        logo: '',
-        unclaimed: 0.24,
-        claimed: 0,
-        claims: [],
-      },
-    ],
-    selected: 'DEMO',
-  }
-}
-
-function save() {
-  localStorage.setItem(KEY, JSON.stringify(state))
-  paint()
-}
-
-function sol(n) {
-  return (Math.round(n * 10000) / 10000).toFixed(4)
+function solText(value) {
+  return value || '0.0000'
 }
 
 function walletOk(value) {
@@ -60,7 +14,7 @@ function walletOk(value) {
 }
 
 function shortCa(ca) {
-  if (!ca) return 'no CA'
+  if (!ca) return ''
   return `${ca.slice(0, 4)}…${ca.slice(-4)}`
 }
 
@@ -105,6 +59,12 @@ function twitterLink(value) {
   return { href: `https://x.com/${handle}`, label: `@${handle}` }
 }
 
+function postLink(value) {
+  const href = safeUrl(String(value || '').trim())
+  if (!href) return null
+  return { href, label: 'tweet' }
+}
+
 function webLink(value) {
   const raw = String(value || '').trim()
   if (!raw) return null
@@ -119,14 +79,161 @@ function linkHtml(link) {
   return `<a href="${escapeHtml(link.href)}" target="_blank" rel="noopener">${escapeHtml(link.label)}</a>`
 }
 
-async function githubUser(login) {
-  const name = login.trim().replace(/^@/, '')
-  if (!/^[A-Za-z0-9-]+$/.test(name)) throw new Error('Enter a GitHub username')
-  const response = await fetch(`https://api.github.com/users/${encodeURIComponent(name)}`)
-  if (response.status === 404) throw new Error('No GitHub account with that name')
-  if (!response.ok) throw new Error('GitHub did not answer')
-  const user = await response.json()
-  return { login: user.login, id: user.id }
+function owned() {
+  if (!session) return []
+  return coins.filter((coin) => coin.githubId === session.id)
+}
+
+function selectedCoin() {
+  return owned().find((coin) => coin.ticker === selected) || owned()[0] || null
+}
+
+function paintClaim() {
+  if (!$('session')) return
+  $('session').textContent = session ? `@${session.login} · id ${session.id}` : 'Not signed in'
+  $('signin').hidden = !!session
+  $('signed').hidden = !session
+  const mine = owned()
+  const select = $('coins')
+  select.innerHTML = mine.map((coin) => {
+    const mark = coin.ticker === selected ? ' selected' : ''
+    return `<option value="${coin.ticker}"${mark}>${coin.name} · ${coin.ticker} · ${shortCa(coin.ca)} · @${coin.github}</option>`
+  }).join('')
+  const coin = selectedCoin()
+  if (!coin) {
+    $('calink').textContent = ''
+    $('unclaimed').textContent = '0.0000'
+    $('accrual').textContent = mine.length ? '' : 'No coin is linked to this GitHub account yet.'
+    $('history').innerHTML = ''
+    $('claim-go').disabled = true
+    return
+  }
+  selected = coin.ticker
+  $('calink').innerHTML = `<a href="https://solscan.io/token/${coin.ca}" target="_blank" rel="noopener">${coin.ca}</a>`
+  $('unclaimed').textContent = solText(coin.unclaimed)
+  $('accrual').textContent = 'Creator fee on this coin. Claim sends it to the wallet below. Later trades add more.'
+  $('claim-go').disabled = Number(coin.unclaimedLamports) <= 0
+  $('history').innerHTML = (coin.claims || []).map((claim) => claimItem({
+    ...claim,
+    ticker: coin.ticker,
+    name: coin.name,
+    github: coin.github,
+  })).join('')
+}
+
+function when(at) {
+  const time = Number(at)
+  if (!time) return ''
+  return new Date(time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+}
+
+function recentClaims() {
+  return coins.flatMap((coin) => (coin.claims || []).map((claim) => ({
+    ticker: coin.ticker,
+    name: coin.name,
+    github: coin.github,
+    amount: claim.amount,
+    wallet: claim.wallet,
+    signature: claim.signature,
+    at: claim.at,
+  }))).sort((a, b) => Number(b.at || 0) - Number(a.at || 0)).slice(0, 8)
+}
+
+function claimItem(claim) {
+  const wallet = claim.wallet ? shortCa(claim.wallet) : ''
+  const sig = String(claim.signature || '')
+  const tx = /^[1-9A-HJ-NP-Za-km-z]{64,88}$/.test(sig)
+    ? `<a href="https://solscan.io/tx/${sig}" target="_blank" rel="noopener">View tx</a>`
+    : ''
+  const github = claim.github ? `@${claim.github}` : ''
+  const title = claim.name || claim.ticker || ''
+  const detail = [claim.name ? claim.ticker : '', github].filter(Boolean).join(' · ')
+  return `<li>
+    <span class="claim-amt">${escapeHtml(claim.amount || '0')} <small>SOL</small></span>
+    <span class="claim-who"><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></span>
+    <span class="claim-to">${wallet ? `to ${escapeHtml(wallet)}` : ''}</span>
+    <span class="claim-meta">${escapeHtml(when(claim.at))} ${tx}</span>
+  </li>`
+}
+
+function paintClaims() {
+  const list = $('claims-list')
+  if (!list) return
+  const rows = recentClaims()
+  list.innerHTML = rows.map(claimItem).join('')
+  const empty = $('claims-empty')
+  if (empty) empty.hidden = rows.length > 0
+}
+
+function paintCoins() {
+  const list = $('coins-list')
+  if (!list) return
+  $('coin-count').textContent = String(coins.length)
+  $('coins-empty').hidden = coins.length > 0
+  list.innerHTML = coins.map((coin) => {
+    const logo = safeLogo(coin.logo)
+    const face = logo
+      ? `<img src="${logo}" alt="" />`
+      : `<b>${escapeHtml(coin.ticker.slice(0, 1))}</b>`
+    const links = [linkHtml(twitterLink(coin.twitter)), linkHtml(postLink(coin.tweet)), linkHtml(webLink(coin.website))].filter(Boolean).join(' · ')
+    const ca = `<a href="https://solscan.io/token/${coin.ca}" target="_blank" rel="noopener">${shortCa(coin.ca)}</a>`
+    return `<li>
+      <span class="face">${face}</span>
+      <span>
+        <strong>${escapeHtml(coin.name)}</strong>
+        <span class="who">${escapeHtml(coin.ticker)} · @${escapeHtml(coin.github)} · id ${coin.githubId}</span>
+        <span class="links">${ca}${links ? ` · ${links}` : ''}</span>
+      </span>
+      <span class="bal"><b data-unclaimed="${escapeHtml(coin.ticker)}">${escapeHtml(coin.unclaimed)}</b> SOL unclaimed</span>
+    </li>`
+  }).join('')
+}
+
+function paintLauncher(xUser) {
+  const signin = $('x-signin')
+  const form = $('create-form')
+  const line = $('x-line')
+  if (!signin || !form) return
+  if (xUser) {
+    signin.hidden = true
+    form.hidden = false
+    if (line) {
+      line.hidden = false
+      line.textContent = `@${xUser.login} · one launch every 10 minutes`
+    }
+  } else {
+    signin.hidden = false
+    form.hidden = true
+    if (line) line.hidden = true
+  }
+}
+
+async function loadDesk() {
+  const jobs = [
+    fetch('/api/auth/me').then((res) => res.json()).catch(() => ({ user: null })),
+    fetch('/api/coins').then((res) => res.json()).catch(() => ({ coins: [] })),
+  ]
+  if ($('create-form')) jobs.push(fetch('/api/x/me').then((res) => res.json()).catch(() => ({ user: null })))
+  const [me, list, x] = await Promise.all(jobs)
+  session = me.user || null
+  coins = list.coins || []
+  if ($('dev-line') && list.dev) $('dev-line').textContent = `Dev on every coin · ${list.dev} · ${list.devSol || '0.0000'} SOL`
+  paintLauncher(x?.user)
+  paintClaim()
+  paintCoins()
+  paintClaims()
+  paintLiveNumbers(list.unclaimedSol)
+  const error = new URLSearchParams(location.search).get('error')
+  if ($('create-form') && error && $('x-line')) {
+    const line = $('x-line')
+    line.hidden = false
+    if (error === 'state') line.textContent = 'X sign-in expired. Try again.'
+    if (error === 'token') line.textContent = 'X did not authorize that account.'
+    if (error === 'config') line.textContent = 'X sign-in is not configured yet.'
+  }
+  if (error === 'state') say('GitHub sign-in expired. Try again.')
+  if (error === 'token') say('GitHub did not authorize that account.')
+  if (error === 'config') say('GitHub sign-in is not configured.')
 }
 
 function readLogo(file) {
@@ -153,148 +260,39 @@ function readLogo(file) {
   })
 }
 
-function owned() {
-  if (!state.session) return []
-  return state.coins.filter((coin) => coin.githubId === state.session.id)
-}
-
-function selectedCoin() {
-  return state.coins.find((coin) => coin.ticker === state.selected) || owned()[0] || null
-}
-
-function paintClaim() {
-  if (!$('session')) return
-  const session = state.session
-  $('session').textContent = session
-    ? `@${session.login} · id ${session.id}`
-    : 'Not signed in'
-  $('signin').hidden = !!session
-  $('signed').hidden = !session
-  const coins = owned()
-  const select = $('coins')
-  select.innerHTML = coins.map((coin) => {
-    const mark = coin.ticker === state.selected ? ' selected' : ''
-    const tag = coin.ca ? shortCa(coin.ca) : `id ${coin.githubId}`
-    return `<option value="${coin.ticker}"${mark}>${coin.ticker} · ${tag} · @${coin.github}</option>`
-  }).join('')
-  const coin = selectedCoin()
-  if (!coin || !session || coin.githubId !== session.id) {
-    $('calink').textContent = ''
-    $('unclaimed').textContent = '0.0000'
-    $('accrual').textContent = coins.length ? '' : 'No coin is paying this GitHub account yet.'
-    $('history').innerHTML = ''
-    $('claim-go').disabled = true
-    return
-  }
-  $('calink').textContent = coin.ca
-    ? `${coin.ca} linked to @${coin.github} · id ${coin.githubId}`
-    : `Linked to @${coin.github} · id ${coin.githubId}`
-  $('unclaimed').textContent = sol(coin.unclaimed)
-  $('accrual').textContent = coin.githubId === 0
-    ? 'Demo trades keep adding the treasury 1%. Claim, then watch the next trades start again.'
-    : 'New trades add the treasury 1% after a claim.'
-  $('claim-go').disabled = coin.unclaimed <= 0
-  $('history').innerHTML = coin.claims.slice(0, 6).map((claim) =>
-    `<li><span>${sol(claim.amount)} SOL → ${claim.wallet.slice(0, 4)}…${claim.wallet.slice(-4)}</span><span>master wallet</span></li>`,
-  ).join('')
-}
-
-function paintCoins() {
-  const list = $('coins-list')
-  if (!list) return
-  const coins = state.coins
-  $('coin-count').textContent = String(coins.length)
-  $('coins-empty').hidden = coins.length > 0
-  list.innerHTML = coins.map((coin) => {
-    const logo = safeLogo(coin.logo)
-    const face = logo
-      ? `<img src="${logo}" alt="" />`
-      : `<b>${escapeHtml(coin.ticker.slice(0, 1))}</b>`
-    const links = [linkHtml(twitterLink(coin.twitter)), linkHtml(webLink(coin.website))].filter(Boolean).join(' · ')
-    return `<li>
-      <span class="face">${face}</span>
-      <span>
-        <strong>${escapeHtml(coin.ticker)}</strong>
-        <span class="who">${escapeHtml(coin.name)} · @${escapeHtml(coin.github)} · id ${coin.githubId}</span>
-        <span class="links">${links || 'On Launch'}</span>
-      </span>
-      <span class="bal">${sol(coin.unclaimed)} SOL</span>
-    </li>`
-  }).join('')
-}
-
-function paint() {
-  paintClaim()
-  paintCoins()
-}
-
-function armDemo() {
-  clearInterval(timer)
-  timer = 0
-  if (state.session?.id !== 0 || !$('unclaimed')) return
-  timer = setInterval(() => {
-    const demo = state.coins.find((coin) => coin.ticker === 'DEMO')
-    if (!demo) return
-    demo.unclaimed = Math.round((demo.unclaimed + 0.01) * 10000) / 10000
-    save()
-  }, 1600)
-}
-
-function signIn(user) {
-  state.session = user
-  const mine = state.coins.find((coin) => coin.githubId === user.id)
-  state.selected = mine?.ticker || state.selected
-  armDemo()
-  save()
-  say(user.id === 0 ? 'Demo claim is open.' : `Signed in as @${user.login}.`)
-}
-
-if ($('signin')) {
-  $('signin').addEventListener('submit', async (event) => {
-    event.preventDefault()
-    say('Checking GitHub…')
-    try {
-      const user = await githubUser($('github').value)
-      signIn(user)
-    } catch (error) {
-      say(error.message || 'GitHub did not answer')
-    }
-  })
-}
-
-if ($('demo')) {
-  $('demo').addEventListener('click', () => {
-    signIn({ login: 'demo', id: 0 })
-  })
-}
-
 if ($('coins')) {
   $('coins').addEventListener('change', () => {
-    state.selected = $('coins').value
-    save()
+    selected = $('coins').value
+    paintClaim()
   })
 }
 
 if ($('claim-form')) {
-  $('claim-form').addEventListener('submit', (event) => {
+  $('claim-form').addEventListener('submit', async (event) => {
     event.preventDefault()
     const coin = selectedCoin()
     const wallet = $('wallet').value.trim()
-    if (!coin || coin.githubId !== state.session?.id) return
+    if (!coin) return
     if (!walletOk(wallet)) {
       say('Enter the Solana wallet that should receive the claim.')
       return
     }
-    if (coin.unclaimed <= 0) {
-      say('Nothing has accrued yet.')
-      return
+    $('claim-go').disabled = true
+    say('Sending the claim…')
+    try {
+      const response = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticker: coin.ticker, wallet }),
+      })
+      const body = await response.json()
+      if (!response.ok) throw new Error(body.error || 'The claim did not send.')
+      say(`Sent ${body.amount} SOL to ${wallet}.`)
+      await loadDesk()
+    } catch (error) {
+      say(error.message || 'The claim did not send.')
+      $('claim-go').disabled = false
     }
-    const amount = coin.unclaimed
-    coin.claims.unshift({ amount, wallet, at: Date.now() })
-    coin.claimed = Math.round((coin.claimed + amount) * 10000) / 10000
-    coin.unclaimed = 0
-    save()
-    say(`Claimed ${sol(amount)} SOL. The master wallet pays ${wallet}. The next trades start a new balance.`)
   })
 }
 
@@ -317,77 +315,90 @@ if ($('logo')) {
 if ($('create-form')) {
   $('create-form').addEventListener('submit', async (event) => {
     event.preventDefault()
+    const note = $('launch-note')
+    const button = event.target.querySelector('button')
     const name = $('name').value.trim()
     const ticker = $('ticker').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')
-    const ownerName = $('owner').value.trim()
-    const twitter = $('twitter').value.trim()
-    const website = $('website').value.trim()
-    const launched = (text) => {
-      $('launch-note').textContent = text
-    }
-    if (!name || ticker.length < 2) {
-      launched('Add a name and a ticker.')
-      return
-    }
-    if (!ownerName) {
-      launched('Add the GitHub account the fees should go to.')
-      return
-    }
-    if (state.coins.some((coin) => coin.ticker === ticker)) {
-      launched('That ticker is already launched.')
-      return
-    }
-    launched('Checking the GitHub account…')
+    button.disabled = true
+    note.textContent = 'Creating the coin on Launch…'
     try {
-      const user = ownerName.replace(/^@/, '') === 'demo'
-        ? { login: 'demo', id: 0 }
-        : await githubUser(ownerName)
-      state.coins.unshift({
-        ticker,
-        name,
-        ca: '',
-        github: user.login,
-        githubId: user.id,
-        twitter,
-        website,
-        logo: logoData,
-        unclaimed: 0,
-        claimed: 0,
-        claims: [],
+      const response = await fetch('/api/launch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          ticker,
+          github: $('owner').value.trim(),
+          twitter: $('twitter').value.trim(),
+          website: $('website').value.trim(),
+          tweet: $('tweet').value.trim(),
+          logo: logoData,
+        }),
       })
-      if (state.session?.id === user.id) state.selected = ticker
-      logoData = ''
+      const body = await response.json()
+      if (!response.ok) throw new Error(body.error || 'Launch did not go through.')
+      note.textContent = `${body.ticker} is on Launch. Mint ${body.ca}. Linked to @${body.github} · id ${body.githubId}.`
       $('name').value = ''
       $('ticker').value = ''
       $('owner').value = ''
       $('twitter').value = ''
       $('website').value = ''
+      $('tweet').value = ''
       $('logo').value = ''
+      logoData = ''
       $('logo-preview').hidden = true
-      $('logo-preview').removeAttribute('src')
-      save()
-      launched(`${ticker} is on GitLaunch, linked to @${user.login} · id ${user.id}. The master wallet stays the dev on Launch. They sign in to claim.`)
     } catch (error) {
-      launched(error.message || 'GitHub did not answer')
+      note.textContent = error.message || 'Launch did not go through.'
+    } finally {
+      button.disabled = false
     }
   })
 }
 
-if ($('trade')) {
-  $('trade').addEventListener('click', () => {
-    const coin = selectedCoin()
-    if (!coin || coin.githubId !== state.session?.id) return
-    coin.unclaimed = Math.round((coin.unclaimed + FEE) * 10000) / 10000
-    save()
-    say(`1 SOL traded. ${sol(FEE)} SOL accrued to @${coin.github}.`)
+document.querySelectorAll('.copy-ca').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const ca = button.getAttribute('data-ca') || ''
+    try {
+      await navigator.clipboard.writeText(ca)
+      button.textContent = 'Copied'
+    } catch {
+      button.textContent = 'Copy'
+    }
+    setTimeout(() => {
+      button.textContent = 'Copy'
+    }, 1200)
   })
-}
-
-window.addEventListener('storage', () => {
-  state = load()
-  armDemo()
-  paint()
 })
 
-armDemo()
-paint()
+function paintLiveNumbers(totalText) {
+  const total = $('unclaimed-total')
+  if (total && totalText) total.textContent = totalText
+  for (const coin of coins) {
+    document.querySelectorAll(`[data-unclaimed="${coin.ticker}"]`).forEach((el) => {
+      el.textContent = coin.unclaimed
+    })
+  }
+  const current = selectedCoin()
+  if ($('unclaimed') && current) {
+    $('unclaimed').textContent = solText(current.unclaimed)
+    if ($('claim-go')) $('claim-go').disabled = Number(current.unclaimedLamports) <= 0
+  }
+}
+
+async function refreshUnclaimed() {
+  if (document.hidden) return
+  const list = await fetch('/api/coins', { cache: 'no-store' }).then((res) => (res.ok ? res.json() : null)).catch(() => null)
+  if (!list?.coins) return
+  const keyOf = (rows) => rows.map((coin) => `${coin.ticker}:${(coin.claims || []).length}`).join('|')
+  const changed = keyOf(list.coins) !== keyOf(coins)
+  coins = list.coins
+  if (changed) {
+    paintCoins()
+    paintClaim()
+    paintClaims()
+  }
+  paintLiveNumbers(list.unclaimedSol)
+}
+
+loadDesk()
+setInterval(refreshUnclaimed, 5000)

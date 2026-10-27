@@ -16,15 +16,19 @@
   </head>
   <body>
     <header class="bar">
-      <a class="brand" href="index.html">
-        <img class="logo" src="/logo.png" alt="" />
-        GitLaunch
-      </a>
+      <div class="brand-block">
+        <a class="brand" href="index.html">
+          <img class="logo" src="/logo.png" alt="" />
+          GitLaunch
+        </a>
+        <a class="followed" href="https://x.com/toly" target="_blank" rel="noopener">Followed by @toly</a>
+      </div>
       <nav>
         <a href="index.html">Home</a>
         <a href="launch.html" aria-current="page">Launch</a>
         <a href="coins.html">Coins</a>
         <a href="claim.html">Claim</a>
+        <a href="https://x.com/usegitlaunch">X</a>
       </nav>
     </header>
 
@@ -35,12 +39,16 @@
       </p>
       <h1>Launch a coin for a GitHub account.</h1>
       <p class="lede">
-        You do not have to be that user. It lists on GitLaunch. The master wallet creates it on Launch and stays the dev.
-        Logo, Twitter, and website ride with the coin.
+        Sign in with X. Each account can launch one coin every 10 minutes.
+        You do not have to be the GitHub user who claims it. The master wallet creates the coin and stays the dev.
       </p>
 
       <section class="create full">
-        <form id="create-form">
+        <div id="x-signin" class="signin">
+          <a class="go" href="/api/x/start">Sign in with X</a>
+        </div>
+        <p id="x-line" class="fine" hidden></p>
+        <form id="create-form" hidden>
           <label>
             Name
             <input id="name" maxlength="32" placeholder="GitLaunch" />
@@ -51,7 +59,7 @@
           </label>
           <label class="wide">
             GitHub
-            <input id="owner" placeholder="username" />
+            <input id="owner" placeholder="account that claims it" />
           </label>
           <label class="wide">
             Logo
@@ -66,15 +74,34 @@
             Website
             <input id="website" placeholder="https://" spellcheck="false" />
           </label>
+          <label class="wide">
+            Tweet
+            <input id="tweet" placeholder="https://x.com/…/status/…" spellcheck="false" />
+          </label>
           <button class="go" type="submit">Launch</button>
           <p id="launch-note" class="fine" role="status"></p>
+          <p class="fine"><a href="/api/x/logout">Sign out of X</a></p>
+          <p id="dev-line" class="fine"></p>
         </form>
       </section>
     </main>
 
     <footer>
-      <img class="logo" src="/logo.png" alt="" />
-      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+      <div class="foot-brand">
+        <img class="logo" src="/logo.png" alt="" />
+        <p>One master wallet is the dev on every coin. A GitHub account claims only the coins linked to it.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Site">
+        <a href="index.html#fees">Fees</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="https://x.com/usegitlaunch">@usegitlaunch</a>
+      </nav>
+      <p class="official">
+        <span>Official CA</span>
+        <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB" target="_blank" rel="noopener">3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</a>
+        <button type="button" class="copy-ca" data-ca="3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB">Copy</button>
+      </p>
     </footer>
     <script src="/app.js" type="module"></script>
   </body>

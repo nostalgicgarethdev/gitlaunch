@@ -11,7 +11,7 @@
 
 <p align="center">
   Official CA<br />
-  <a href="https://solscan.io/token/CyNPZ2kxDHmef2Qc7EAk6zxbkzejwk9ZkGUmf13xeoFV"><code>CyNPZ2kxDHmef2Qc7EAk6zxbkzejwk9ZkGUmf13xeoFV</code></a>
+  <a href="https://solscan.io/token/3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB"><code>3G3SLBmbpngX4aEZAngcGvUirNXnjcuAMEnHYJfYLAaB</code></a>
 </p>
 
 The coin lists on GitLaunch. One master wallet creates every coin and stays the dev on the chart. Each coin remembers one GitHub numeric id. A rename still matches. Another coin does not share that claim.
