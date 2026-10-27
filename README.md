@@ -9,15 +9,20 @@
   <a href="https://usegitlaunch.fun">usegitlaunch.fun</a>
 </p>
 
-The coin lists on GitLaunch. The master wallet creates it on Launch and stays the dev on the chart. GitHub's numeric user id is who can claim. A rename still matches.
+<p align="center">
+  Official CA<br />
+  <a href="https://solscan.io/token/CyNPZ2kxDHmef2Qc7EAk6zxbkzejwk9ZkGUmf13xeoFV"><code>CyNPZ2kxDHmef2Qc7EAk6zxbkzejwk9ZkGUmf13xeoFV</code></a>
+</p>
+
+The coin lists on GitLaunch. One master wallet creates every coin and stays the dev on the chart. Each coin remembers one GitHub numeric id. A rename still matches. Another coin does not share that claim.
 
 ## Fees
 
-A trade is 3%.
+A trade splits three ways.
 
-- **1%** buys the launched coin and burns it. That buy shows as the dev.
-- **1%** is burned by the platform.
-- **1%** accrues to the GitHub id. Claim sends that balance to a Solana wallet. Later trades start a new balance.
+- **0.5%** is the creator fee. LaunchLab caps it there. It belongs to that coin's GitHub account. Claim sends what is actually there.
+- **1%** is the platform fee. It stays with the master wallet, from every coin.
+- **0.25%** is Raydium's protocol fee.
 
 ## Flow
 
@@ -40,4 +45,4 @@ Static site. `index.html`, `launch.html`, `coins.html`, `claim.html`, `app.js`, 
 
 `logo.png` is the mark. `hero.png` is the homepage art. The arrow points up and to the right.
 
-The ledger in this build is stored in the browser. GitHub sign-in is a public user lookup, not an OAuth app. The master wallet has not signed a create or a payout.
+Sign-in is GitHub OAuth. The account that authorizes is the account that can claim. A launch is created on Launch by the master wallet. A claim pays the creator fee only when that fee is actually there.
