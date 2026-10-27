@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claim · GitLaunch</title>
+    <meta name="description" content="Sign in with GitHub and claim what the trades accrued." />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@500;600&family=Schibsted+Grotesk:wght@400;560;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <a class="brand" href="index.html">
+        <img class="logo" src="/logo.png" alt="" />
+        GitLaunch
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="launch.html">Launch</a>
+        <a href="coins.html">Coins</a>
+        <a href="claim.html" aria-current="page">Claim</a>
+      </nav>
+    </header>
+
+    <main>
+      <p class="kicker">
+        <img class="logo" src="/logo.png" alt="" />
+        Claim
+      </p>
+      <h1>Sign in with GitHub. Claim what the trades accrued.</h1>
+      <p class="lede">
+        The id has to match the coin. Enter a Solana wallet. That claim is what the master wallet pays.
+        The next trades start a new balance.
+      </p>
+
+      <section class="desk sheet" id="claim" aria-labelledby="claim-title">
+        <div class="desk-top">
+          <h2 id="claim-title">Claim</h2>
+          <p id="session" class="session">Not signed in</p>
+        </div>
+        <form id="signin" class="signin">
+          <label>
+            GitHub account
+            <input id="github" name="github" autocomplete="username" placeholder="username" />
+          </label>
+          <div class="row">
+            <button class="go" type="submit">Sign in with GitHub</button>
+            <button id="demo" class="ghost" type="button">Open the demo</button>
+          </div>
+        </form>
+        <div id="signed" hidden>
+          <label>
+            Coin
+            <select id="coins"></select>
+          </label>
+          <p id="calink" class="ca"></p>
+          <p class="unclaimed"><span id="unclaimed">0</span> <small>SOL unclaimed</small></p>
+          <p id="accrual" class="fine"></p>
+          <form id="claim-form">
+            <label>
+              Solana wallet
+              <input id="wallet" placeholder="Where the master wallet pays" spellcheck="false" />
+            </label>
+            <button id="claim-go" class="go" type="submit">Claim</button>
+            <button id="trade" class="ghost" type="button">Add a 1 SOL trade</button>
+          </form>
+          <ol id="history" class="history"></ol>
+        </div>
+        <p id="note" class="fine" role="status"></p>
+      </section>
+    </main>
+
+    <footer>
+      <img class="logo" src="/logo.png" alt="" />
+      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+    </footer>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GitLaunch</title>
+    <meta
+      name="description"
+      content="Launch a coin for a GitHub account. It lists on GitLaunch, on Launch."
+    />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@500;600&family=Schibsted+Grotesk:wght@400;560;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <a class="brand" href="index.html">
+        <img class="logo" src="/logo.png" alt="" />
+        GitLaunch
+      </a>
+      <nav>
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="launch.html">Launch</a>
+        <a href="coins.html">Coins</a>
+        <a href="claim.html">Claim</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker">
+            <img class="logo" src="/logo.png" alt="" />
+            On GitLaunch, on Launch
+          </p>
+          <h1>Launch a coin for a GitHub account.</h1>
+          <p class="lede">
+            The coin lists here. The master wallet creates it on Launch, so the chart shows that wallet as the dev.
+            The numeric id GitHub assigns is who can claim. One percent of each trade accrues there.
+          </p>
+          <div class="row home-actions">
+            <a class="go" href="launch.html">Launch</a>
+            <a class="ghost" href="coins.html">Coins</a>
+            <a class="ghost" href="claim.html">Claim</a>
+          </div>
+        </div>
+        <img class="hero-art" src="/hero.png" alt="" />
+      </section>
+
+      <section class="fees" id="fees">
+        <h2>Where a trade goes</h2>
+        <ol>
+          <li>
+            <img class="logo" src="/logo.png" alt="" />
+            <strong>1%</strong>
+            <span>Buys the coin and burns it. The master wallet is the buyer, so it shows up as the dev.</span>
+          </li>
+          <li>
+            <img class="logo" src="/logo.png" alt="" />
+            <strong>1%</strong>
+            <span>Burned by the platform.</span>
+          </li>
+          <li>
+            <img class="logo" src="/logo.png" alt="" />
+            <strong>1%</strong>
+            <span>Accrues to the GitHub account. Claim sends it. The next trades start a new balance.</span>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <img class="logo" src="/logo.png" alt="" />
+      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+    </footer>
+  </body>
+</html>

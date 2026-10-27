@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Launch · GitLaunch</title>
+    <meta name="description" content="Launch a coin for a GitHub account. It lists on GitLaunch, on Launch." />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@500;600&family=Schibsted+Grotesk:wght@400;560;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <a class="brand" href="index.html">
+        <img class="logo" src="/logo.png" alt="" />
+        GitLaunch
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="launch.html" aria-current="page">Launch</a>
+        <a href="coins.html">Coins</a>
+        <a href="claim.html">Claim</a>
+      </nav>
+    </header>
+
+    <main>
+      <p class="kicker">
+        <img class="logo" src="/logo.png" alt="" />
+        Launch
+      </p>
+      <h1>Launch a coin for a GitHub account.</h1>
+      <p class="lede">
+        You do not have to be that user. It lists on GitLaunch. The master wallet creates it on Launch and stays the dev.
+        Logo, Twitter, and website ride with the coin.
+      </p>
+
+      <section class="create full">
+        <form id="create-form">
+          <label>
+            Name
+            <input id="name" maxlength="32" placeholder="GitLaunch" />
+          </label>
+          <label>
+            Ticker
+            <input id="ticker" maxlength="10" placeholder="GIT" />
+          </label>
+          <label class="wide">
+            GitHub
+            <input id="owner" placeholder="username" />
+          </label>
+          <label class="wide">
+            Logo
+            <input id="logo" type="file" accept="image/*" />
+          </label>
+          <img id="logo-preview" alt="" hidden width="64" height="64" />
+          <label>
+            Twitter
+            <input id="twitter" placeholder="@handle" spellcheck="false" />
+          </label>
+          <label>
+            Website
+            <input id="website" placeholder="https://" spellcheck="false" />
+          </label>
+          <button class="go" type="submit">Launch</button>
+          <p id="launch-note" class="fine" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <img class="logo" src="/logo.png" alt="" />
+      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+    </footer>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

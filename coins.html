@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Coins · GitLaunch</title>
+    <meta name="description" content="Coins launched on GitLaunch, on Launch." />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@500;600&family=Schibsted+Grotesk:wght@400;560;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <a class="brand" href="index.html">
+        <img class="logo" src="/logo.png" alt="" />
+        GitLaunch
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="launch.html">Launch</a>
+        <a href="coins.html" aria-current="page">Coins</a>
+        <a href="claim.html">Claim</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="desk-top">
+        <div>
+          <p class="kicker">
+            <img class="logo" src="/logo.png" alt="" />
+            Coins
+          </p>
+          <h1>Coins launched</h1>
+        </div>
+        <p id="coin-count" class="session"></p>
+      </div>
+      <p class="lede">Listed on GitLaunch, created on Launch by the master wallet. Saved in this browser.</p>
+      <ol id="coins-list" class="board"></ol>
+      <p id="coins-empty" class="fine" hidden>Nothing launched on this browser yet.</p>
+    </main>
+
+    <footer>
+      <img class="logo" src="/logo.png" alt="" />
+      <p>GitLaunch sits on Launch. The GitHub id is the claim. This site stores the launch. The master wallet has not signed a create or a payout.</p>
+    </footer>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
